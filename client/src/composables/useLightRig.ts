@@ -35,6 +35,11 @@ let refCount = 0
 let frame = 0
 let detach: (() => void) | null = null
 
+/** The rig's current position, mutated in place every tick. A plain object
+ *  rather than a ref: canvas consumers (NodeField) read it once per frame
+ *  inside their own draw loop and have no use for Vue reactivity here. */
+export const lightPos = { x: 0.34, y: 0.22 }
+
 export function useLightRig() {
   onMounted(() => {
     refCount += 1
@@ -54,6 +59,8 @@ function start() {
   if (isReducedMotion()) {
     root.style.setProperty('--light-x', '0.5')
     root.style.setProperty('--light-y', '0.18')
+    lightPos.x = 0.5
+    lightPos.y = 0.18
     return
   }
 
@@ -125,6 +132,8 @@ function start() {
     root.style.setProperty('--light-y', y.toFixed(4))
     root.style.setProperty('--px', px.toFixed(4))
     root.style.setProperty('--py', py.toFixed(4))
+    lightPos.x = x
+    lightPos.y = y
 
     frame = requestAnimationFrame(tick)
   }

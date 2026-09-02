@@ -15,7 +15,7 @@ export const SITE = {
   location: 'Philippines', // ⚑
   timezone: 'GMT+8',
   url: 'https://your-domain.com', // ⚑
-  email: 'hello@your-domain.com', // ⚑
+  email: 'miles.angelo77@gmail.com',
   availability: {
     open: true,
     line: 'Taking on freelance projects and internships',
@@ -23,7 +23,7 @@ export const SITE = {
   socials: [
     { label: 'GitHub', href: 'https://github.com/your-handle' }, // ⚑
     { label: 'LinkedIn', href: 'https://linkedin.com/in/your-handle' }, // ⚑
-    { label: 'Email', href: 'mailto:hello@your-domain.com' }, // ⚑
+    { label: 'Email', href: 'mailto:miles.angelo77@gmail.com' },
   ],
 } as const
 

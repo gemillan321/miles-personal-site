@@ -2,7 +2,7 @@
 import { useLightRig } from '@/composables/useLightRig'
 import { useCalmMode } from '@/composables/useCalmMode'
 
-import AuroraField from '@/components/visual/AuroraField.vue'
+import NodeField from '@/components/visual/NodeField.vue'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
 
@@ -25,7 +25,7 @@ useLightRig()
 <template>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <AuroraField />
+  <NodeField />
   <div class="grain" aria-hidden="true" />
 
   <SiteHeader />

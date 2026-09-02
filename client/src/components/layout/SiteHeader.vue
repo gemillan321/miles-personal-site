@@ -175,6 +175,18 @@ onBeforeUnmount(() => {
   inset: 0 0 auto 0;
   z-index: 100;
   transition: background-color 380ms var(--ease-soft);
+  animation: header-in 700ms var(--ease-spatial) both;
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .header::after {
@@ -430,6 +442,9 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .header {
+    animation: none;
+  }
   .header__inner,
   .menu__link,
   .burger__bar,

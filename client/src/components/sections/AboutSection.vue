@@ -2,6 +2,7 @@
 import { ABOUT } from '@/content/site'
 import RailSegment from '@/components/visual/RailSegment.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
+import milesPhoto from '@/assets/miles-photo.png'
 </script>
 
 <template>
@@ -32,12 +33,20 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
              text and one quietly alive — enough personality to feel like a
              person, not enough to become a section about hobbies. -->
         <ul class="bento about__facts">
+          <li v-reveal class="cell cell--w2 cell--h2 surface lit-edge about__photo">
+            <div class="about__photo-glow" aria-hidden="true" />
+            <img :src="milesPhoto" alt="Miles" class="about__photo-img" width="683" height="900" />
+            <div class="about__photo-scrim" aria-hidden="true" />
+            <p class="label about__photo-label">Behind this site</p>
+            <p class="display-s about__photo-name">Miles</p>
+          </li>
+
           <li
             v-for="(fact, i) in ABOUT.facts"
             :key="fact.label"
             v-reveal="i * 70"
             v-spotlight
-            class="cell cell--w2 glass lit-edge about__fact"
+            class="cell glass lit-edge about__fact"
           >
             <p class="label">{{ fact.label }}</p>
             <p class="display-s about__fact-value">{{ fact.value }}</p>
@@ -115,6 +124,60 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
   gap: 6px;
   min-height: 138px;
   transition: transform 420ms var(--ease-spatial);
+}
+
+/* ── Photo ────────────────────────────────────────────────────────────────── */
+/* The one bento cell that isn't text. A cutout portrait, not a framed photo —
+   it sits directly on the cell's ground so it reads as part of the material
+   rather than a pasted-in image, with a glow standing in for a backdrop. */
+.about__photo {
+  padding: 0;
+  justify-content: flex-end;
+  background: var(--color-ground-3);
+}
+
+.about__photo-glow {
+  position: absolute;
+  inset: -15%;
+  z-index: 0;
+  background: radial-gradient(
+    55% 50% at 50% 28%,
+    color-mix(in oklab, var(--color-violet) 55%, transparent),
+    transparent 70%
+  );
+  filter: blur(48px);
+}
+
+.about__photo-img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: drop-shadow(0 20px 34px rgb(0 0 0 / 0.5));
+}
+
+.about__photo-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(to top, rgb(10 11 15 / 0.82), transparent 55%);
+  pointer-events: none;
+}
+
+.about__photo-label {
+  position: relative;
+  z-index: 3;
+  margin: 0 0 4px;
+  padding: 0 clamp(16px, 2vw, 24px);
+}
+
+.about__photo-name {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  padding: 0 clamp(16px, 2vw, 24px) clamp(16px, 2vw, 24px);
 }
 
 .about__fact:hover {

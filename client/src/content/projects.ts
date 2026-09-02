@@ -3,43 +3,103 @@ import type { Project } from '@/types'
 /* ────────────────────────────────────────────────────────────────────────────
    Featured work — case studies, not cards.
 
-   ⚑ The Rizal Arcade entry below is a scaffold built from what is known so
-     far. Replace the marked fields with real details (metrics, links,
-     screenshots) as the project develops. Everything the section renders comes
-     from this array, so adding a project is one object — no component edits.
+   Everything the section renders comes from this array, so adding a project
+   is one object — no component edits.
+
+   ⚑ threatlens-cti is currently a private repo. Add its Repository link below
+     once it's flipped to public — see gh repo edit gemillan321/threatlens-cti
+     --visibility public.
 
    The template at the bottom of this file shows the shape.
    ──────────────────────────────────────────────────────────────────────────── */
 
 export const PROJECTS: Project[] = [
   {
+    slug: 'threatlens-cti',
+    name: 'ThreatLens',
+    kicker: 'Cyber threat intelligence assistant',
+    year: '2026',
+    status: 'Prototype',
+    summary:
+      'A working MVP that turns a weekly pile of security advisories into structured, sourced CTI drafts instead of another AI summary with no paper trail.',
+    problem:
+      'Cyber threat intelligence work means reading a stack of advisories every week and turning what matters into a short written brief. Doing that by hand does not scale, and letting a model summarize headlines unsupervised produces confident, unsourced nonsense — exactly the wrong failure mode for a security workflow.',
+    role: 'Concept, architecture, front end, API, and the OpenAI integration — solo build.',
+    contribution: [
+      'Built an RSS ingestion pipeline that pulls only from a trusted-source allowlist — CISA, Microsoft Security, Unit 42, Cisco Talos — instead of the open web',
+      'Wired every AI-drafted report back to the source article it came from, so a claim is never presented without the evidence that produced it',
+      'Designed the Supabase schema with row-level security so each analyst account only ever sees its own workspace',
+      'Wrote the trust-boundary documentation and a pre-deployment security checklist before writing the deployment guide',
+    ],
+    interesting:
+      'The hard part was not the AI integration, it was deciding what the model should never be trusted to do alone. Every generated report stays editable and explicitly marked as a draft until a person signs off — the workflow assumes the analyst, not the model, is accountable for what ships.',
+    stack: ['Vue 3', 'Express', 'Supabase (Postgres + Auth + RLS)', 'OpenAI API'],
+    metrics: [
+      { label: 'Trusted sources', value: '4 feeds' },
+      { label: 'Role', value: 'Solo' },
+      { label: 'Stage', value: 'Working MVP' },
+    ],
+    links: [],
+    accent: 'cyan',
+    preview: 'dashboard',
+  },
+  {
     slug: 'rizal-arcade',
     name: 'Rizal Arcade',
-    kicker: 'Educational platform',
+    kicker: 'Educational game platform',
     year: '2026',
     status: 'In progress',
     summary:
-      'An interactive web platform that teaches through play rather than through another wall of text.',
+      'Six two-to-five-minute games that teach José Rizal’s life and writing for college Rizal Life classes — played, not read, with every answer sourced.',
     problem:
-      'Course material that students are required to read is not material students want to read. The subject matter is genuinely interesting, and the format is what loses people. The question was whether the same content could be delivered as something you play with instead of something you scroll through.', // ⚑ refine with real project framing
-    role: 'Design, front end, back end, data model, deployment — the whole build.',
+      'Course material that students are required to read is not material students want to read. The question was whether a Rizal Life class could run on something with the pick-and-play feel of a browser arcade, without losing the accuracy a history class requires.',
+    role: 'Design, front end, back end, data model, deployment — the whole build, still active.',
     contribution: [
-      'Designed the platform structure and how a learner moves through it',
-      'Built the interactive modules and the state that tracks progress',
-      'Designed the data model behind content, progress and results',
-      'Handled deployment, hosting and iteration on real feedback',
+      'Built six distinct games — a values-based river crossing, a novel-character memory match, an Atbash codebreaker, a study-route passport game, a correspondence dossier, and a museum curation game — instead of one reskinned template',
+      'Designed the Supabase-backed classroom layer: roster import, row-level security so a student sees only their own section, and one-time CSV credential export for instructors',
+      'Sourced every historical claim to a primary text, public-domain translation, or an NHCP marker, and labeled interpretation separately from fact throughout',
+      'Set up a dual deployment split — Vercel Functions for the protected roster and admin endpoints, a static build for the public landing page',
     ],
     interesting:
-      'The hard part is not the interactivity, it is pacing. Too much game and nothing is learned; too little and it is a textbook with buttons. Most of the work has gone into the loop between showing something, letting the learner try it, and responding to what they did.',
-    stack: ['Vue', 'Node / Express', 'Database', 'Deployment'], // ⚑ replace with the real stack
+      'No single game was the hard part — the classroom layer underneath all six was. One Supabase project handles authentication, per-section leaderboards, and a roster importer an instructor can run without me in the room, which is what actually makes this usable in a real class instead of a nice demo.',
+    stack: ['React 19', 'TypeScript', 'Tailwind CSS', 'Vinext / Vite', 'Supabase (Postgres + Auth + RLS)', 'Vercel Functions'],
     metrics: [
-      { label: 'Scope', value: 'Full build' },
+      { label: 'Playable games', value: '6' },
       { label: 'Role', value: 'Solo' },
       { label: 'Stage', value: 'In development' },
     ],
-    links: [], // ⚑ add { label: 'Live site', href: '…' } / repository when available
+    links: [{ label: 'Repository', href: 'https://github.com/gemillan321/rizal-arcade' }],
     accent: 'violet',
     preview: 'arcade',
+  },
+  {
+    slug: 'happypaws-clinic',
+    name: 'HappyPaws Clinic',
+    kicker: 'Clinic management system',
+    year: '2026',
+    status: 'Archived',
+    summary:
+      'A role-based booking and medical-records system for a vet clinic — separate admin, vet, and client views instead of one dashboard with hidden permissions.',
+    problem:
+      'A small clinic’s booking process usually lives in a notebook or a messaging app inbox — no shared record of a pet’s medical history, no simple way for an owner to check it, and no real separation between what a receptionist, a vet, and a client should each be able to see or change.',
+    role: 'Full-stack build — schema, API, and three separate role-based front ends.',
+    contribution: [
+      'Built distinct admin, vet, and client views instead of one dashboard with permissions bolted on afterward',
+      'Designed the medical record, appointment, pet, and owner data model and the REST API behind it',
+      'Added JWT-based authentication with a dedicated auth store on the front end',
+      'Structured the backend as proper MVC — controllers, routes, and models split by domain — instead of one file handling everything',
+    ],
+    interesting:
+      'The real design problem was permissions, not CRUD: a vet needs to write medical records, a client needs to read only their own pet’s, and an admin needs full visibility without being able to silently rewrite medical history. Getting that split right mattered more than any individual screen.',
+    stack: ['Vue 3', 'Express', 'MySQL', 'JWT Auth'],
+    metrics: [
+      { label: 'Access levels', value: 'Admin / Vet / Client' },
+      { label: 'Role', value: 'Solo' },
+      { label: 'Stage', value: 'Coursework build' },
+    ],
+    links: [{ label: 'Repository', href: 'https://github.com/gemillan321/HappyPawsClinic_Finals' }],
+    accent: 'azure',
+    preview: 'layers',
   },
   {
     slug: 'this-site',
