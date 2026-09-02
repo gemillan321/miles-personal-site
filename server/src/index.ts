@@ -2,6 +2,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import helmet from 'helmet'
+import type { HelmetOptions } from 'helmet'
+import type { RequestHandler } from 'express'
 import cors from 'cors'
 import compression from 'compression'
 
@@ -19,6 +21,7 @@ import { inquiryRouter } from './routes/inquiry.js'
 
 const app = express()
 const here = path.dirname(fileURLToPath(import.meta.url))
+const createHelmet = helmet as unknown as (options?: HelmetOptions) => RequestHandler
 
 // Behind a proxy (most hosts), so req.ip reflects the real client for the
 // rate limiter rather than the load balancer.
@@ -26,7 +29,7 @@ app.set('trust proxy', 1)
 
 app.disable('x-powered-by')
 app.use(
-  helmet({
+  createHelmet({
     // The client is a static bundle served from its own origin; a strict CSP
     // belongs on the static host, where the hashes are known.
     contentSecurityPolicy: false,
@@ -60,9 +63,13 @@ app.use('/api', (_req, res) => {
   res.status(404).json({ ok: false, message: 'Not found.' })
 })
 
-app.listen(config.port, () => {
-  console.info(
-    `[server] listening on http://localhost:${config.port} (${config.env})` +
-      (config.mail.enabled ? '' : ' — SMTP not configured, enquiries will be logged'),
-  )
-})
+if (!process.env.VERCEL) {
+  app.listen(config.port, () => {
+    console.info(
+      `[server] listening on http://localhost:${config.port} (${config.env})` +
+        (config.mail.enabled ? '' : ' — SMTP not configured, enquiries will be logged'),
+    )
+  })
+}
+
+export default app

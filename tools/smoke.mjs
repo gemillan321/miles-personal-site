@@ -6,6 +6,8 @@ import { chromium } from 'playwright'
 
 const errors = []
 const results = []
+const baseUrl = process.env.SMOKE_BASE_URL ?? 'http://127.0.0.1:4173'
+const apiUrl = process.env.SMOKE_API_URL ?? 'http://127.0.0.1:8787'
 const ok = (name, cond, extra = '') =>
   results.push(`${cond ? 'PASS' : 'FAIL'}  ${name}${extra ? ` — ${extra}` : ''}`)
 
@@ -18,13 +20,17 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
 page.on('pageerror', (e) => errors.push(String(e)))
 
-// The built client calls /api/inquiry on its own origin; point that at Express.
-await page.route('**/api/**', (route) => {
-  const url = new URL(route.request().url())
-  route.continue({ url: `http://127.0.0.1:8787${url.pathname}${url.search}` })
-})
+// For local previews, route API requests to the standalone Express server.
+// Set SMOKE_API_URL to the same value as SMOKE_BASE_URL to exercise a
+// deployment's own same-origin proxy instead.
+if (apiUrl !== baseUrl) {
+  await page.route('**/api/**', (route) => {
+    const url = new URL(route.request().url())
+    route.continue({ url: `${apiUrl}${url.pathname}${url.search}` })
+  })
+}
 
-await page.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle' })
+await page.goto(baseUrl, { waitUntil: 'networkidle' })
 
 // 1. The rig is running and writing to the document.
 await page.mouse.move(900, 300)

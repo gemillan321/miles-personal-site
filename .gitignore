@@ -23,3 +23,5 @@ logs/
 .vite/
 *.tsbuildinfo
 coverage/
+
+.vercel
