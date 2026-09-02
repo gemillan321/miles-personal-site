@@ -55,7 +55,7 @@ await page.locator('button.calm').click()
 ok('calm mode off', (await page.evaluate(() => document.documentElement.dataset.calm)) === 'false')
 
 // 5. The through-line draws as you scroll.
-await page.evaluate(() => document.querySelector('#process')?.scrollIntoView())
+await page.evaluate(() => document.querySelector('#process .steps')?.scrollIntoView())
 await page.waitForTimeout(900)
 const draw = await page.evaluate(() => {
   const el = document.querySelector('#process .steps')
