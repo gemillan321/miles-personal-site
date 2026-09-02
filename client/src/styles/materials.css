@@ -1,0 +1,267 @@
+/* ────────────────────────────────────────────────────────────────────────────
+   Materials — the physical layer of the design system.
+
+   Everything here reads --light-x / --light-y (The Rig). The trick that makes
+   the lighting coherent across unrelated elements is `background-attachment:
+   fixed`: it resolves background percentages against the viewport rather than
+   the element, so a sheen positioned "at the light" lands in the same real
+   place on every panel on screen. Move the light and the whole page turns
+   under it together.
+
+   Where fixed attachment is unavailable or expensive (touch devices), the
+   fallback is a static top-left sheen — the same material, just not tracking.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+/* ── Surfaces ─────────────────────────────────────────────────────────────── */
+
+/* Solid surface. The default. Most of the site is NOT glass. */
+.surface {
+  position: relative;
+  background: var(--color-ground-2);
+  border: 1px solid rgb(255 255 255 / 0.07);
+  border-radius: var(--radius-panel);
+}
+
+/* Glass. Reserved for elevated / interactive / foreground things. */
+.glass {
+  position: relative;
+  isolation: isolate;
+  background: var(--glass-fill);
+  border-radius: var(--radius-panel);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  overflow: hidden;
+}
+
+.glass--strong {
+  background: var(--glass-fill-strong);
+  --glass-blur: 20px;
+}
+
+/* Lit 1px border: brighter on the edge facing the light. */
+.lit-edge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background-image: radial-gradient(
+    70vmax 50vmax at calc(var(--light-x) * 100%) calc(var(--light-y) * 100%),
+    rgb(255 255 255 / 0.5),
+    rgb(255 255 255 / 0.14) 42%,
+    rgb(255 255 255 / 0.06) 100%
+  );
+  background-attachment: fixed;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Specular sheen across the face of the surface. */
+.sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(
+    60vmax 45vmax at calc(var(--light-x) * 100%) calc(var(--light-y) * 100%),
+    rgb(255 255 255 / 0.09),
+    rgb(255 255 255 / 0.02) 40%,
+    transparent 62%
+  );
+  background-attachment: fixed;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Touch devices: fixed attachment is unreliable and costly. Static sheen. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .lit-edge::before,
+  .sheen::after {
+    background-attachment: scroll;
+    background-image: radial-gradient(
+      140% 120% at 12% -10%,
+      rgb(255 255 255 / 0.26),
+      rgb(255 255 255 / 0.07) 45%,
+      rgb(255 255 255 / 0.04) 100%
+    );
+  }
+  .sheen::after {
+    background-image: radial-gradient(
+      120% 100% at 10% -20%,
+      rgb(255 255 255 / 0.07),
+      transparent 60%
+    );
+  }
+}
+
+/* ── Cursor-local glow ────────────────────────────────────────────────────── */
+/* Set --mx/--my (px, element-relative) on pointerenter/move via v-spotlight.
+   Only the hovered element runs this, so it stays cheap. */
+.spotlight::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 0%),
+    rgb(255 255 255 / 0.075),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 320ms var(--ease-soft);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.spotlight:hover::before,
+.spotlight:focus-within::before {
+  opacity: 1;
+}
+
+/* ── Neumorphic controls ──────────────────────────────────────────────────── */
+/* Deliberately rare: toggles, segmented controls, small raised chips.
+   Shadow direction is derived from the rig, not hardcoded to "top-left". */
+.neu {
+  background: linear-gradient(
+    145deg,
+    color-mix(in oklab, var(--color-ground-3) 88%, white 6%),
+    var(--color-ground-2)
+  );
+  border: 1px solid rgb(255 255 255 / 0.06);
+  box-shadow:
+    calc((0.5 - var(--light-x)) * 12px) calc((0.5 - var(--light-y)) * 12px) 24px -8px
+      rgb(0 0 0 / 0.7),
+    calc((var(--light-x) - 0.5) * 5px) calc((var(--light-y) - 0.5) * 5px) 10px -6px
+      rgb(255 255 255 / 0.09),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+.neu--pressed {
+  box-shadow:
+    inset calc((0.5 - var(--light-x)) * 8px) calc((0.5 - var(--light-y)) * 8px) 14px -4px
+      rgb(0 0 0 / 0.7),
+    inset 0 0 0 1px rgb(255 255 255 / 0.04);
+}
+
+/* ── Film grain ───────────────────────────────────────────────────────────── */
+/* Sits above the aurora, below content. Kills gradient banding and gives the
+   darkness a material quality instead of a flat void. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.032;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Hairlines and dividers ───────────────────────────────────────────────── */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.11) 18%,
+    rgb(255 255 255 / 0.11) 82%,
+    transparent
+  );
+}
+
+/* ── Bento ────────────────────────────────────────────────────────────────── */
+.bento {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 760px) {
+  .bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+.cell {
+  position: relative;
+  border-radius: var(--radius-cell);
+  padding: clamp(16px, 2vw, 24px);
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cell--w2 {
+  grid-column: span 2;
+}
+.cell--w3 {
+  grid-column: span 2;
+}
+.cell--w4 {
+  grid-column: span 2;
+}
+.cell--h2 {
+  min-height: 200px;
+}
+
+@media (min-width: 760px) {
+  .cell--w3 {
+    grid-column: span 3;
+  }
+  .cell--w4 {
+    grid-column: span 4;
+  }
+  .cell--h2 {
+    grid-row: span 2;
+    min-height: 312px;
+  }
+}
+
+/* ── Signal accents ───────────────────────────────────────────────────────── */
+.signal-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-signal);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--color-signal) 70%, transparent);
+}
+
+.signal-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1px solid color-mix(in oklab, var(--color-signal) 45%, transparent);
+  animation: signal-pulse 2.8s var(--ease-soft) infinite;
+}
+
+@keyframes signal-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-dot::after {
+    animation: none;
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}

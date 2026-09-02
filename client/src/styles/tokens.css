@@ -1,0 +1,89 @@
+/* ────────────────────────────────────────────────────────────────────────────
+   Design tokens — Midnight Aurora
+   See DESIGN.md for the reasoning behind each group.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* ── Type ──────────────────────────────────────────────────────────────── */
+  --font-display: 'Inter Tight Variable', 'Inter Variable', ui-sans-serif, system-ui,
+    -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-editorial: 'Instrument Serif', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+
+  /* ── Ground: charcoal, never pure black ────────────────────────────────── */
+  --color-ground: #0a0b0f;
+  --color-ground-2: #0e1016;
+  --color-ground-3: #131722;
+  --color-ground-4: #191e2b;
+
+  /* ── Ink ───────────────────────────────────────────────────────────────────
+     Every step is checked against the *brightest* point the aurora reaches,
+     not the darkest part of the page — the faintest tier still clears 4.5:1
+     where a violet bloom passes behind it, so small metadata stays readable
+     wherever the light happens to be. */
+  --color-ink: #f4f6fa;
+  --color-ink-muted: #aab2c2;
+  --color-ink-soft: #949cad;
+  --color-ink-faint: #8a92a4;
+
+  /* ── Aurora: cool field ────────────────────────────────────────────────── */
+  --color-violet: #8b5cf6;
+  --color-azure: #3b82f6;
+  --color-cyan: #22d3ee;
+
+  /* ── Signal: the one warm accent. Spend it sparingly. ──────────────────── */
+  --color-signal: #ffa45c;
+  --color-signal-deep: #e07a34;
+
+  /* ── Motion ────────────────────────────────────────────────────────────── */
+  --ease-spatial: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Rhythm ────────────────────────────────────────────────────────────── */
+  --radius-panel: 20px;
+  --radius-cell: 16px;
+  --radius-chip: 999px;
+}
+
+:root {
+  /* The Rig. One light source; every lit surface reads these two values.
+     Updated by a single rAF loop in useLightRig(). 0..1, viewport-relative. */
+  --light-x: 0.34;
+  --light-y: 0.22;
+
+  /* Damped pointer position, -1..1 from viewport centre. Used for parallax. */
+  --px: 0;
+  --py: 0;
+
+  /* Header/scroll state, 0..1 */
+  --scrolled: 0;
+
+  /* Glass recipe — one place to retune every glass surface on the site. */
+  --glass-fill: rgb(255 255 255 / 0.045);
+  --glass-fill-strong: rgb(255 255 255 / 0.07);
+  --glass-blur: 14px;
+  --glass-border: rgb(255 255 255 / 0.1);
+  --glass-border-lit: rgb(255 255 255 / 0.28);
+
+  /* Layout. The rail is the narrow left column that carries the through-line
+     and the section indices; it collapses to a thin gutter on small screens
+     rather than disappearing, so the line still runs the full page. */
+  --rail-width: 26px;
+  --shell-max: 1240px;
+  --gutter: clamp(24px, 5vw, 56px);
+}
+
+@media (min-width: 1080px) {
+  :root {
+    --rail-width: 92px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --light-x: 0.5;
+    --light-y: 0.2;
+    --px: 0;
+    --py: 0;
+  }
+}
