@@ -103,9 +103,9 @@ the bottom of that file shows every field. `preview` picks which built-in illust
 (`arcade`, `layers`, `dashboard`); when there is a real screenshot to show, replace
 `<ProjectPreview>` in `WorkSection.vue` with an `<img>` and keep everything else.
 
-**Placeholders to replace before launch** — search the repo for `⚑`:
+**Launch details** — keep these current when identity or domain details change:
 
-- `client/src/content/site.ts` — full name, email, domain, GitHub and LinkedIn handles
+- `client/src/content/site.ts` — full name, email, domain and social links
 - `client/index.html` — title, description, canonical URL, Open Graph URLs, JSON-LD
 - `client/public/robots.txt` and `sitemap.xml` — domain
 - `client/src/content/projects.ts` — real Rizal Arcade details, stack and links
@@ -148,7 +148,7 @@ apart.
 
 1. Build: `npm run build`
 2. Deploy `client/dist/` to any static host.
-3. Deploy `server/` and run `npm start`, with `CORS_ORIGINS=https://your-domain.com`.
+3. Deploy `server/` and run `npm start`, with `CORS_ORIGINS=https://gemillanlabs.com`.
 4. Point `/api/*` at the API — either a host-level rewrite, or set `CORS_ORIGINS` and change the
    `fetch` URL in `useInquiryForm.ts` to the API's absolute origin.
 

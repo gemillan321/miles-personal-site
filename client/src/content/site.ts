@@ -1,28 +1,21 @@
 import type { NavItem } from '@/types'
 
-/* ────────────────────────────────────────────────────────────────────────────
-   Site-level content and identity.
-
-   ⚑ PLACEHOLDERS — replace these with real details before launch. They are
-     also mirrored in index.html (title, description, canonical, OG, JSON-LD);
-     keep the two in sync.
-   ──────────────────────────────────────────────────────────────────────────── */
+/* Site-level content and identity. Keep this in sync with index.html. */
 
 export const SITE = {
   name: 'Miles',
-  fullName: 'Miles', // ⚑ full name
+  fullName: 'Miles Gemillan',
   role: 'Computer Science student & developer',
-  location: 'Philippines', // ⚑
+  location: 'Philippines',
   timezone: 'GMT+8',
-  url: 'https://your-domain.com', // ⚑
+  url: 'https://gemillanlabs.com',
   email: 'miles.angelo77@gmail.com',
   availability: {
     open: true,
     line: 'Taking on freelance projects and internships',
   },
   socials: [
-    { label: 'GitHub', href: 'https://github.com/your-handle' }, // ⚑
-    { label: 'LinkedIn', href: 'https://linkedin.com/in/your-handle' }, // ⚑
+    { label: 'GitHub', href: 'https://github.com/gemillan321' },
     { label: 'Email', href: 'mailto:miles.angelo77@gmail.com' },
   ],
 } as const
