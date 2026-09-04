@@ -61,8 +61,19 @@ await page.locator('button.calm').click()
 ok('calm mode off', (await page.evaluate(() => document.documentElement.dataset.calm)) === 'false')
 
 // 5. The through-line draws as you scroll.
-await page.evaluate(() => document.querySelector('#process .steps')?.scrollIntoView())
-await page.waitForTimeout(900)
+await page.evaluate(() => {
+  const steps = document.querySelector('#process .steps')
+  if (!steps) return
+
+  const top = steps.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.25
+  window.scrollTo({ top, behavior: 'instant' })
+})
+await page
+  .waitForFunction(() => {
+    const steps = document.querySelector('#process .steps')
+    return steps && Number(getComputedStyle(steps).getPropertyValue('--draw')) > 0
+  }, undefined, { timeout: 5_000 })
+  .catch(() => {})
 const draw = await page.evaluate(() => {
   const el = document.querySelector('#process .steps')
   return el ? getComputedStyle(el).getPropertyValue('--draw').trim() : ''
@@ -81,8 +92,20 @@ await page.fill('#f-business', 'A small bakery')
 await page.fill('#f-message', 'We need a website with online ordering for the shop.')
 await page.fill('#f-contact', 'test@example.com')
 await page.locator('.inquiry__submit').click()
-await page.waitForTimeout(1500)
-ok('submission accepted', await page.locator('.sent').isVisible())
+await page
+  .locator('.sent, .inquiry__hint--error')
+  .first()
+  .waitFor({ state: 'visible', timeout: 20_000 })
+  .catch(() => {})
+const submissionAccepted = await page.locator('.sent').isVisible()
+const submissionError = submissionAccepted
+  ? ''
+  : ((await page.locator('.inquiry__hint--error').textContent().catch(() => '')) ?? '').trim()
+ok(
+  'submission accepted',
+  submissionAccepted,
+  submissionAccepted ? '' : submissionError || 'no response within 20 seconds',
+)
 
 // 8. Guitar strings respond.
 await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
