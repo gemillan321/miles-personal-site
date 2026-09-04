@@ -130,6 +130,61 @@ ok('every form control is labelled', structure.labelled)
 
 ok('no console errors', errors.length === 0, errors.slice(0, 3).join(' | '))
 
+// 10. A touch-first mobile session stays put when browser chrome changes the
+// viewport height. This guards against both accidental #top navigation and
+// the resize churn that can make constrained mobile browsers reload a tab.
+const mobilePage = await browser.newPage({
+  viewport: { width: 390, height: 844 },
+  isMobile: true,
+  hasTouch: true,
+})
+let mobileNavigations = 0
+mobilePage.on('framenavigated', (frame) => {
+  if (frame === mobilePage.mainFrame()) mobileNavigations += 1
+})
+await mobilePage.goto(baseUrl, { waitUntil: 'networkidle' })
+
+const mobileLightBefore = await mobilePage.evaluate(() =>
+  getComputedStyle(document.documentElement).getPropertyValue('--light-x').trim(),
+)
+await mobilePage.waitForTimeout(500)
+const mobileLightAfter = await mobilePage.evaluate(() =>
+  getComputedStyle(document.documentElement).getPropertyValue('--light-x').trim(),
+)
+
+await mobilePage.evaluate(() =>
+  document.querySelector('#services')?.scrollIntoView({ behavior: 'instant', block: 'start' })
+)
+await mobilePage.setViewportSize({ width: 390, height: 780 })
+await mobilePage.setViewportSize({ width: 390, height: 844 })
+await mobilePage.waitForTimeout(300)
+
+const mobileState = await mobilePage.evaluate(() => ({
+  hash: window.location.hash,
+  scrollY: window.scrollY,
+  topLinks: document.querySelectorAll('a[href="#top"]').length,
+}))
+ok('mobile effects remain static', mobileLightBefore === mobileLightAfter)
+ok(
+  'mobile scroll survives viewport changes',
+  mobileNavigations === 1 && mobileState.scrollY > 200 && mobileState.hash !== '#top',
+  `navigations ${mobileNavigations}, scrollY ${Math.round(mobileState.scrollY)}, hash ${mobileState.hash || '(none)'}`,
+)
+ok('no accidental #top controls', mobileState.topLinks === 0, `found ${mobileState.topLinks}`)
+await mobilePage.close()
+
+// 11. Concurrent visitors receive independent successful responses from the
+// static site and its shared health endpoint.
+const concurrentResponses = await Promise.all([
+  ...Array.from({ length: 12 }, () => fetch(`${baseUrl}/`, { redirect: 'follow' })),
+  ...Array.from({ length: 6 }, () => fetch(`${apiUrl}/api/health`, { redirect: 'follow' })),
+])
+ok(
+  'concurrent visitors are served',
+  concurrentResponses.every((response) => response.ok),
+  concurrentResponses.map((response) => response.status).join(', '),
+)
+
 await browser.close()
 console.log(results.join('\n'))
 process.exit(results.some((r) => r.startsWith('FAIL')) ? 1 : 0)

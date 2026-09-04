@@ -21,10 +21,10 @@ export const PROCESS: ProcessStep[] = [
   },
   {
     n: '03',
-    title: 'Design and prototype',
+    title: 'Prototype in the browser',
     blurb:
-      'You see the thing before it is built. Layouts, screens, the actual flow — early, when changing it is cheap.',
-    forYou: 'You can say "not that, this" while it still costs nothing to change.',
+      'I build the first version directly in code — real layouts, screens and interactions you can open on your phone. No separate mockup that has to be rebuilt later.',
+    forYou: 'You react to something real and can say "not that, this" while changes are still easy.',
   },
   {
     n: '04',

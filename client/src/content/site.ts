@@ -60,19 +60,31 @@ export const ABOUT = {
   ],
   /** Small personal bento — tasteful, not a life story. */
   facts: [
-    { label: 'Based in', value: 'Philippines', detail: 'GMT+8 · working with anyone, anywhere' },
-    { label: 'Currently building', value: 'Rizal Arcade', detail: 'An interactive learning platform' },
-    { label: 'Also learning', value: 'AWS & cloud architecture', detail: 'Because things have to run somewhere' },
-    { label: 'Weekends', value: 'CTFs and guitar', detail: 'Both are pattern recognition, arguably' },
+    { label: 'Based in', value: 'Philippines', detail: 'GMT+8 · available for remote work' },
+    {
+      label: 'Currently building',
+      value: 'Gemillan Labs',
+      detail: 'A home for my projects, experiments, and client work',
+    },
+    {
+      label: 'Currently learning',
+      value: 'Full-stack engineering',
+      detail: 'Turning fast builds into reliable products',
+    },
+    {
+      label: 'Weekends',
+      value: 'CTFs, side projects & guitar',
+      detail: 'Usually building, breaking, or playing something',
+    },
   ],
 }
 
 export const WORKFLOW = {
   kicker: 'How I work',
-  headlineLead: 'Modern tools, but the',
-  headlineEditorial: 'engineering is mine',
+  headlineLead: 'AI helps me move fast. The',
+  headlineEditorial: 'result still has to work',
   headlineTail: '.',
-  lede: 'AI is part of how I build — the same way version control and a good debugger are. It changes how fast I can move, not who is responsible for the result.',
+  lede: 'I build directly in code with AI as part of the workflow. It helps me explore, debug, and iterate quickly; I still test what comes out, make the product decisions, and keep learning the parts I do not understand yet.',
   columns: [
     {
       title: 'What AI speeds up',
@@ -84,17 +96,17 @@ export const WORKFLOW = {
       ],
     },
     {
-      title: 'What stays mine',
+      title: 'What I stay responsible for',
       items: [
-        'Deciding how the system is structured and why',
-        'Understanding every line that ships — no code I cannot explain',
-        'Integration, security decisions and handling failure cases',
-        'Testing, deployment, and being accountable when something breaks',
+        'Understanding the problem and choosing what should be built',
+        'Reviewing, testing and refining what the tools produce',
+        'Checking real user flows, edge cases and mobile behaviour',
+        'Deployment, communication and taking responsibility for the result',
       ],
     },
   ],
   footnote:
-    'The practical effect for a small business: fewer billable hours spent on groundwork, more spent on the parts specific to you, and a much shorter gap between "here is an idea" and "here is something you can click".',
+    'The practical effect: a much shorter gap between "here is an idea" and "here is something you can click", with more time spent testing what is specific to the project instead of polishing a mockup that is not the real product.',
 }
 
 export const CONTACT = {

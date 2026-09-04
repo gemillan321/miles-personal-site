@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref } from 'vue'
-import { isReducedMotion } from '@/composables/useMotionPreference'
+import { shouldUseStaticEffects } from '@/composables/useMotionPreference'
 import { isCalm } from '@/composables/useCalmMode'
 import { lightPos } from '@/composables/useLightRig'
 
@@ -32,6 +32,7 @@ let W = 0
 let H = 0
 let DPR = 1
 let frame = 0
+let resizeFrame = 0
 let bootStart = 0
 let reduced = false
 
@@ -177,17 +178,31 @@ function easeOutCubic(t: number) {
   return 1 - u * u * u
 }
 
-function resize() {
+function resize(force = false) {
   const canvas = canvasRef.value
-  if (!canvas || !ctx) return
-  DPR = Math.min(window.devicePixelRatio || 1, 2)
-  W = window.innerWidth
-  H = window.innerHeight
+  if (!canvas || !ctx) return false
+
+  const nextW = window.innerWidth
+  const nextH = window.innerHeight
+  const nextDpr = Math.min(window.devicePixelRatio || 1, reduced ? 1.25 : 2)
+  const widthChanged = Math.abs(nextW - W) > 1
+  const dprChanged = Math.abs(nextDpr - DPR) > 0.01
+  const significantHeightChange = Math.abs(nextH - H) > Math.max(160, H * 0.2)
+
+  // Opening and closing mobile browser chrome changes only the viewport
+  // height. Reallocating a high-DPI canvas for each of those tiny changes is
+  // costly and unnecessary; orientation and real layout changes still pass.
+  if (!force && !widthChanged && !dprChanged && !significantHeightChange) return false
+
+  DPR = nextDpr
+  W = nextW
+  H = nextH
   canvas.width = W * DPR
   canvas.height = H * DPR
   canvas.style.width = `${W}px`
   canvas.style.height = `${H}px`
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0)
+  return true
 }
 
 function buildField() {
@@ -460,7 +475,7 @@ let paused = false
 
 function onVisibility() {
   paused = document.hidden
-  if (!paused && !frame) frame = requestAnimationFrame(tick)
+  if (!paused && !frame && !reduced && scrollFade >= 0.01) frame = requestAnimationFrame(tick)
 }
 
 function tick(now: number) {
@@ -476,19 +491,30 @@ function tick(now: number) {
     return
   }
   draw(now)
+  if (scrollFade < 0.01 && now - bootStart >= BOOT_MS) {
+    frame = 0
+    return
+  }
   frame = requestAnimationFrame(tick)
 }
 
 function onResize() {
-  resize()
-  if (reduced) draw(performance.now())
+  if (resizeFrame) return
+  resizeFrame = requestAnimationFrame(() => {
+    resizeFrame = 0
+    if (resize() && (reduced || !frame)) draw(performance.now())
+  })
 }
 
 function onScroll() {
   updateScrollFade()
   // The rAF loop already re-reads scrollFade every frame; reduced-motion
   // mode has no loop, so it needs an explicit redraw here instead.
-  if (reduced) draw(performance.now())
+  if (reduced) {
+    draw(performance.now())
+  } else if (!frame && !paused && !isCalm() && scrollFade >= 0.01) {
+    frame = requestAnimationFrame(tick)
+  }
 }
 
 onMounted(() => {
@@ -498,11 +524,11 @@ onMounted(() => {
   if (!ctx) return
 
   readTokens()
-  resize()
+  reduced = shouldUseStaticEffects()
+  resize(true)
   buildField()
   updateScrollFade()
 
-  reduced = isReducedMotion()
   bootStart = reduced ? -BOOT_MS : performance.now()
 
   window.addEventListener('resize', onResize)
@@ -518,7 +544,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (frame) cancelAnimationFrame(frame)
+  if (resizeFrame) cancelAnimationFrame(resizeFrame)
   frame = 0
+  resizeFrame = 0
   window.removeEventListener('resize', onResize)
   window.removeEventListener('scroll', onScroll)
   document.removeEventListener('visibilitychange', onVisibility)

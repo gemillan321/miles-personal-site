@@ -8,7 +8,7 @@ export const DISCIPLINES: Discipline[] = [
     id: 'software',
     title: 'Software development',
     blurb:
-      'The foundation everything else sits on — structuring a system so it can be understood, changed and extended six months later by someone who is not me.',
+      'The foundation I am building through real projects — breaking problems into smaller pieces, reading the code, testing what it does, and improving it as I learn.',
     tags: ['TypeScript', 'JavaScript', 'Python', 'Git', 'Testing'],
     span: 'w2',
     tall: true,
@@ -25,10 +25,10 @@ export const DISCIPLINES: Discipline[] = [
   },
   {
     id: 'cloud',
-    title: 'Cloud & AWS',
+    title: 'Deployment & hosting',
     blurb:
-      'Getting software onto the internet properly — hosting, storage, domains, and knowing roughly what it will cost to run.',
-    tags: ['AWS', 'S3', 'EC2', 'Deployment', 'CI/CD'],
+      'Getting projects out of a local folder and onto the internet — deployments, domains, environment variables, and the first steps into cloud infrastructure.',
+    tags: ['Vercel', 'Domains', 'Environment variables', 'GitHub', 'Learning AWS'],
     span: 'w2',
     accent: 'cyan',
   },
@@ -36,7 +36,7 @@ export const DISCIPLINES: Discipline[] = [
     id: 'security',
     title: 'Cybersecurity',
     blurb:
-      'A working habit rather than a specialism: authentication done properly, input never trusted, secrets kept out of the codebase. Sharpened on CTF competitions.',
+      'A growing area of interest: thinking about authentication, untrusted input, exposed secrets, and how software can fail before it reaches real users.',
     tags: ['Web security', 'Auth', 'CTF', 'Hardening'],
     span: 'w2',
     accent: 'azure',
@@ -45,16 +45,16 @@ export const DISCIPLINES: Discipline[] = [
     id: 'ai',
     title: 'AI-assisted development',
     blurb:
-      'Modern tooling used as an accelerator — prototyping, refactoring, debugging — with every architectural decision and every shipped line still mine to defend.',
+      'How I turn an idea into working software quickly: use AI to explore and build, then test the result, question what looks wrong, and learn the code the product depends on.',
     tags: ['Prototyping', 'Refactoring', 'Code review', 'Tooling'],
     span: 'w2',
     accent: 'violet',
   },
   {
     id: 'systems',
-    title: 'Systems & data',
+    title: 'Data & APIs',
     blurb:
-      'Designing how information is stored and how the pieces talk to each other. Usually the part that decides whether a project ages well.',
+      'Connecting interfaces to the useful part underneath — forms, stored information, user accounts, and APIs that let different pieces work together.',
     tags: ['Databases', 'Schema design', 'APIs', 'Automation'],
     span: 'w4',
     accent: 'cyan',

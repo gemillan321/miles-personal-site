@@ -20,10 +20,10 @@ const year = new Date().getFullYear()
 
       <div class="footer__grid">
         <div class="footer__brand">
-          <a class="footer__logo" href="#top">
+          <div class="footer__logo">
             <BrandMark />
             <span>{{ SITE.name }}</span>
-          </a>
+          </div>
           <p class="footer__line">{{ SITE.role }} · {{ SITE.location }} · {{ SITE.timezone }}</p>
           <p v-if="SITE.availability.open" class="footer__status">
             <span class="signal-dot" />

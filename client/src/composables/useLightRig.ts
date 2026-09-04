@@ -1,5 +1,5 @@
 import { onMounted, onBeforeUnmount } from 'vue'
-import { isReducedMotion } from './useMotionPreference'
+import { shouldUseStaticEffects } from './useMotionPreference'
 import { isCalm } from './useCalmMode'
 
 /**
@@ -56,7 +56,7 @@ function start() {
   const root = document.documentElement
 
   // Reduced motion: place the light once, at rest, and never animate it.
-  if (isReducedMotion()) {
+  if (shouldUseStaticEffects()) {
     root.style.setProperty('--light-x', '0.5')
     root.style.setProperty('--light-y', '0.18')
     lightPos.x = 0.5

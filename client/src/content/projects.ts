@@ -104,22 +104,22 @@ export const PROJECTS: Project[] = [
   {
     slug: 'this-site',
     name: 'This website',
-    kicker: 'Personal site & design system',
+    kicker: 'AI-assisted portfolio build',
     year: '2026',
     status: 'Live',
     summary:
-      'A portfolio built as a real project — its own design system, its own lighting model, no template underneath.',
+      'A portfolio shaped as a real product — custom visual direction, working interactions, a contact API, and no template underneath.',
     problem:
       'A developer portfolio has to convince two very different readers at once: a business owner deciding whether to trust me with their money, and a developer deciding whether I can actually build. Most portfolios pick one and lose the other.',
-    role: 'Everything — concept, design system, front end, API, deployment.',
+    role: 'Direction, content decisions, testing, and deployment through an AI-assisted workflow.',
     contribution: [
-      'Built a design system around a single simulated light source, so every glass surface on the page reacts coherently',
-      'Wrote a continuous scroll-drawn line that threads the whole page and does structural work in each section',
-      'Hand-rolled the motion layer — one animation frame loop and an IntersectionObserver, no animation library',
-      'Built the enquiry API with validation, rate limiting and spam handling',
+      'Directed and refined a visual system built around one simulated light source instead of a generic portfolio template',
+      'Turned the site copy into an honest account of how I build, what I know, and what I am still learning',
+      'Tested the real experience across interaction states, mobile viewports, deployment, and domain setup',
+      'Connected the enquiry flow to a deployed API with validation, rate limiting, and spam handling',
     ],
     interesting:
-      'The lighting is the part I am most pleased with. Two CSS variables hold the light position; every panel, border and shadow derives from them. Moving the cursor turns the entire page under one lamp instead of animating a hundred separate effects.',
+      'This site is also a record of how I work now: I can start with a rough direction, use AI to get to a real version quickly, then keep testing, questioning, and refining it until it feels like mine.',
     stack: ['Vue 3', 'TypeScript', 'Vite', 'Tailwind CSS', 'Express', 'Web Audio API'],
     metrics: [
       { label: 'Dependencies', value: 'Minimal' },

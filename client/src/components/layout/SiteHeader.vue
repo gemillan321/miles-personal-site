@@ -67,10 +67,10 @@ onBeforeUnmount(() => {
 <template>
   <header class="header" :class="{ 'is-scrolled': scrolled }">
     <div class="header__inner shell">
-      <a class="brand" href="#top" aria-label="Back to top">
+      <div class="brand" aria-label="Miles">
         <BrandMark />
         <span class="brand__name">{{ SITE.name }}</span>
-      </a>
+      </div>
 
       <nav class="nav" aria-label="Primary">
         <a

@@ -53,14 +53,14 @@ export const SERVICES: Service[] = [
     accent: 'azure',
   },
   {
-    id: 'rebuilds',
-    title: 'Rebuilds & rescues',
+    id: 'prototypes',
+    title: 'MVPs & first versions',
     blurb:
-      'An existing site that is slow, dated, broken on phones, or that nobody can update any more — brought up to standard without losing what already works.',
+      'A focused first version of an idea — enough to put in front of real people, learn what matters, and decide what should come next.',
     examples: [
-      'Making an old site fast, secure and usable on mobile',
-      'Taking over a project someone else left unfinished',
-      'Keeping your look, replacing everything underneath it',
+      'Turning a rough idea into something people can actually try',
+      'Testing the core workflow before committing to a larger build',
+      'A focused demo for early users, a pitch, or a new service',
     ],
     accent: 'signal',
   },

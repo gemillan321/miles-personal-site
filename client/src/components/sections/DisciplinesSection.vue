@@ -27,7 +27,7 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
           lead="There is more to this than"
           editorial="web development"
           tail="."
-          lede="Six areas I work in. They overlap constantly — which is the point, because most real problems land in the gaps between them."
+          lede="Six areas I build and learn across. They overlap constantly, because making a useful product means connecting more than one kind of skill."
         />
 
         <div class="bento disciplines">
